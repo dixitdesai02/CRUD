@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+h1 {
+    margin: 0;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+label {
+    text-shadow: 0px 0px 1px #000;
+}
+
+form {
+    width: 800px;
+    max-width: 92%;
+    margin: auto;
+}
+
+::placeholder {
+    font-size: 0.9rem;
+}
+
+form img {
+    width: 180px;
+    border: 0;
+    outline: 0;
+    object-fit: contain;
+}
+
+#Products .container {
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items: center;
+    gap: 1rem;
+}
+
+#Products .card {
+    width: 15rem;
+    height: 22rem;
+}
+
+.card img {
+    height: 10rem;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.card-title {
+    cursor: pointer;
+}
+
+.card-price {
+    font-size: 0.9rem;
+    text-shadow: 0px 0px 1px #000;
+}
+
+.card-price span {
+    font-size: 0.7rem;
+}
+
+.card .card-desc {
+    height: 3rem
+}
+.card .edit {
+    background-color: rgba(255,193,7,0.4);
+    border: 1px solid rgba(255,193,7, 0.4);
+}
+
+.card .edit:hover {
+    background-color: rgba(255,193,7,0.6);
+}
+
+.card .edit:active {
+    background-color: rgba(255,193,7);
+}
+
+.card .delete {
+    background-color: rgba(220,53,69,0.85);
+}
+
+.card .delete:hover {
+    background-color: rgba(220,53,69,0.9);
+}
+
+.card .delete:active {
+    background-color: rgba(220,53,69,1);
+}
+
+
+
+@media screen and (min-width: 508px) {
+    #Products .container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (min-width: 776px) {
+    #Products .container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (min-width: 1100px) {
+    #Products .container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    #Products .container {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+
+.notification {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 10%;
+    right: 0;
+    color: white;
+    z-index: 10;
+    background: rgba(220,53,69,0.9);
+    width: 350px;
+    vertical-align: middle;
+    padding: 1em;
+    border-radius: 5px 0 0 5px;
+}
+
+.notification p {
+    margin: auto 0;
+}
+
+@media screen and (min-width: 556px) {
+    .notification {
+        width: 500px;
+    }
+}
