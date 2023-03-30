@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Management System</title>
 
-    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="images/logo-1.png" type="image/x-icon">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
@@ -33,18 +33,25 @@
 
 </head>
 <body>
-    <header class="bg-dark text-light">
-        <h1 class="fs-2 fw-bold text-center py-4">Product Management System</h1>
+    <header class="bg-dark text-light py-3 sticky-top">
+        <div class="container d-flex justify-content-between">
+            <h2 class="fw-bold"> <img src="images/logo-1.png" alt="logo"> PMS</h2>
+            <button id="add-btn" class="btn btn-success">Add Product</button>
+        </div>
     </header>
 
     <!-- Notification -->
     <div class="notification">
-        <p>Storage is Full! Delete some items to Add more..</p> <i class="close fa-solid fa-xmark fs-4"></i> 
+        
     </div>
 
-    <section id="AddProduct" class="bg-light py-4">
-        <div class="container">
+
+    <section id="AddProduct" class="bg-light">
+        <div class="container py-4">
+
             <form>
+                <fieldset class="border border-2 rounded-3 p-4 px-sm-5">
+                    <legend  class="float-none w-auto fs-5 fw-bold">Add Product</legend>
                 <div class="d-flex gap-4 mb-4">
                     <div class="w-50">
                         <label for="product-id" class="form-label">Product ID</label>
@@ -74,8 +81,36 @@
                         <img id="output"/>	
                     </div>
                 </div>
-                <button type="submit" class="btn btn-dark">Submit</button>
-              </form>
+                <button type="submit" class="mt-3 btn btn-success">Save Product</button>
+            </fieldset>
+            </form>
+        </div>
+    </section>
+
+    <!-- Sort & Filter -->
+    <section id="sort-filter" class="mt-2">
+        <div class="container d-flex gap-2 justify-content-center justify-content-between flex-column flex-md-row">
+            <div class="sort d-flex gap-2">
+                <div class="d-flex">
+                    <span class="d-block m-auto me-2">Sort By:</span>
+                    <select class="form-select sort-selector">
+                        <option value="select">Select</option>
+                        <option value="id">ID</option>
+                        <option value="name">Name</option>
+                        <option value="price">Price</option>
+                    </select>
+                </div>
+                <div>
+                    <select class="form-select order-selector">
+                        <option value="asc" selected>ASC</option>
+                        <option value="desc">DESC</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter">
+                <input type="text" class="form-control search" placeholder="Search by Product ID, Name ...">
+            </div>
         </div>
     </section>
 
@@ -115,7 +150,7 @@
                             <textarea class="form-control" id="edit-description" rows="3" placeholder="Product Description"></textarea>
                         </div>
                     </div>
-                    <div class="d-flex gap-4 mb-3">
+                    <div class="d-flex gap-4 mb-4">
                         <div class="w-50">
                             <label for="edit-image" class="form-label">Image</label>
                             <input type="file" accept="image/*" class="form-control" id="edit-image">
@@ -124,8 +159,8 @@
                             <img id="output-edit"/>	
                         </div>
                     </div>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-dark">Save changes</button>
+                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn edit" data-bs-dismiss="modal">Save changes</button>
                   </form>
             </div>
         </div>

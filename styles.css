@@ -4,8 +4,42 @@
     font-family: 'Poppins', sans-serif;
 }
 
+body {
+    position: relative;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
 h1 {
     margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #212529;
+}
+
+header {
+    z-index: 100;
+}
+
+header img {
+    width: 50px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.form-select {
+    width: 100px;
+    cursor: pointer;
 }
 
 input::-webkit-outer-spin-button,
@@ -18,9 +52,22 @@ label {
     text-shadow: 0px 0px 1px #000;
 }
 
-form {
-    width: 800px;
-    max-width: 92%;
+#AddProduct {
+    position: relative;
+    top: -550px;
+    max-height: 0;
+    height: fit-content;
+    transition: all 0.3s linear;
+}
+
+#AddProduct.show {
+    max-height: 650px;
+    top: 0;
+}
+
+#AddProduct form {
+    width: 900px;
+    max-width: 95%;
     margin: auto;
 }
 
@@ -43,7 +90,7 @@ form img {
 }
 
 #Products .card {
-    width: 15rem;
+    width: 16rem;
     height: 22rem;
 }
 
@@ -69,16 +116,17 @@ form img {
 .card .card-desc {
     height: 3rem
 }
-.card .edit {
+
+.edit {
     background-color: rgba(255,193,7,0.4);
     border: 1px solid rgba(255,193,7, 0.4);
 }
 
-.card .edit:hover {
+.edit:hover {
     background-color: rgba(255,193,7,0.6);
 }
 
-.card .edit:active {
+.edit:active {
     background-color: rgba(255,193,7);
 }
 
@@ -95,42 +143,43 @@ form img {
 }
 
 
-
-@media screen and (min-width: 508px) {
+@media screen and (min-width: 567px) {
     #Products .container {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media screen and (min-width: 776px) {
+@media screen and (min-width: 991px) {
     #Products .container {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-@media screen and (min-width: 1100px) {
+@media screen and (min-width: 1200px) {
     #Products .container {
         grid-template-columns: repeat(4, 1fr);
     }
 }
 
-@media screen and (min-width: 1400px) {
+@media screen and (min-width: 1450px) {
     #Products .container {
         grid-template-columns: repeat(5, 1fr);
     }
 }
 
 
+.save-modal-btn {
+    background:rgba(255,193,7,0.4);
+}
+
+
 .notification {
     display: none;
-    justify-content: space-between;
-    align-items: center;
     position: fixed;
     top: 10%;
     right: 0;
     color: white;
-    z-index: 10;
-    background: rgba(220,53,69,0.9);
+    z-index: 1500;
     width: 350px;
     vertical-align: middle;
     padding: 1em;
@@ -139,6 +188,10 @@ form img {
 
 .notification p {
     margin: auto 0;
+}
+
+.notification i {
+    cursor: pointer;
 }
 
 @media screen and (min-width: 556px) {
