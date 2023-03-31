@@ -36,7 +36,10 @@
     <header class="bg-dark text-light py-3 sticky-top">
         <div class="container d-flex justify-content-between">
             <h2 class="fw-bold"> <img src="images/logo-1.png" alt="logo"> PMS</h2>
-            <button id="add-btn" class="btn btn-success">Add Product</button>
+            <div class="btn-container d-flex gap-3">
+                <button id="add-btn" class="btn btn-success">Add Product</button>
+                <button id="sort-btn" class="btn btn-success">Sort & Filter</button>
+            </div>
         </div>
     </header>
 
@@ -89,8 +92,8 @@
 
     <!-- Sort & Filter -->
     <section id="sort-filter" class="mt-2">
-        <div class="container d-flex gap-2 justify-content-center justify-content-between flex-column flex-md-row">
-            <div class="sort d-flex gap-2">
+        <div class="container d-flex gap-3 justify-content-center justify-content-md-between flex-column flex-md-row">
+            <div class="sort d-flex gap-2 w-100">
                 <div class="d-flex">
                     <span class="d-block m-auto me-2">Sort By:</span>
                     <select class="form-select sort-selector">
@@ -108,8 +111,8 @@
                 </div>
             </div>
 
-            <div class="filter">
-                <input type="text" class="form-control search" placeholder="Search by Product ID, Name ...">
+            <div class="filter w-100">
+                <input type="text" class="form-control search w-100" placeholder="Search by Product ID, Name, Desc...">
             </div>
         </div>
     </section>
@@ -121,11 +124,11 @@
     </section>
 
     <!-- Modal -->
-    <div class="modal fade" id="modal" tabindex="-1">
+    <section class="modal fade" id="modal" tabindex="-1">
         <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-            <h1 class="modal-title fs-5">Edit Product</h1>
+            <h1 class="modal-title fs-5"></h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -160,12 +163,23 @@
                         </div>
                     </div>
                     <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn edit" data-bs-dismiss="modal">Save changes</button>
+                    <button type="submit" class="btn edit save-changes" data-bs-dismiss="modal">Save changes</button>
                   </form>
             </div>
         </div>
         </div>
-    </div>
+    </section>
+
+
+        <nav>
+        <div class="bottom-field">
+            <ul class="pagination">
+              <li class="prev"><a href="#" id="prev">&#139;</a></li>
+                <!-- page number here -->
+              <li class="next"><a href="#" id="next">&#155;</a></li>
+            </ul>
+        </div>
+      </nav>
 
 </body>
 </html>

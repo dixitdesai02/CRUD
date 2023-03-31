@@ -52,6 +52,21 @@ label {
     text-shadow: 0px 0px 1px #000;
 }
 
+#sort-filter {
+    position: relative;
+    top: -80px;
+    visibility: hidden;
+    max-height: 0;
+    height: fit-content;
+    transition: all 0.1s linear;
+}
+
+#sort-filter.show {
+    visibility: visible;
+    top: 0;
+    max-height: 100px;
+}
+
 #AddProduct {
     position: relative;
     top: -550px;
@@ -63,6 +78,7 @@ label {
 #AddProduct.show {
     max-height: 650px;
     top: 0;
+    z-index: 1;
 }
 
 #AddProduct form {
@@ -81,6 +97,8 @@ form img {
     outline: 0;
     object-fit: contain;
 }
+
+
 
 #Products .container {
     display: grid;
@@ -198,4 +216,40 @@ form img {
     .notification {
         width: 500px;
     }
+}
+
+
+.bottom-field{
+    width: 100%;
+    padding: 20px;
+    margin-top: 20px;
+}
+.pagination{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pagination li{
+  list-style: none;
+  padding: 2px;
+  margin: 5px;
+  flex-shrink: 0;
+  text-align: center;
+  border-radius: 3px;
+  border: 1px solid rgb(219, 219, 219);
+  color: #444;
+  font-weight: bold;
+}
+.pagination li.active{
+  background: #20ac86;
+  color: white;
+  border-color: #20ac86;
+}
+
+.pagination li a{
+  text-decoration: none;
+  padding: 3px 8px;
+  color: inherit;
+  display: block;
+  font-size: 13px;
 }
