@@ -35,13 +35,49 @@
 <body>
     <header class="bg-dark text-light py-3 sticky-top">
         <div class="container d-flex justify-content-between">
-            <h2 class="fw-bold"> <img src="images/logo-1.png" alt="logo"> PMS</h2>
-            <div class="btn-container d-flex gap-3">
-                <button id="add-btn" class="btn btn-success">Add Product</button>
-                <button id="sort-btn" class="btn btn-success">Sort & Filter</button>
+            <a href="/" class="fw-bold text-light fs-2"> <img src="images/logo-1.png" alt="logo" draggable="false"> PMS</a>
+            <div class="nav-list my-auto">
+                <div class="hamburger-menu">
+                    <div class="line line-1"></div>
+                    <div class="line line-2"></div>
+                    <div class="line line-3"></div>
+                </div>
+
+                <div class="btn-container d-flex flex-column flex-md-row gap-3 align-items-sm-center">
+                    <button id="add-btn" class="btn px-3 btn-success d-none">Add Product</button>
+                    <button id="sort-btn" class="btn px-3 btn-success">Sort & Filter</button>
+                    <button id="login-btn" class="btn px-3 btn-info d-none"  data-bs-toggle="modal" data-bs-target="#login-modal" >Login</button>
+                    <button id="logout-btn" class="btn px-3 btn-info d-none mt-3 mt-md-0 ms-md-3">Logout</button>
+                </div>
             </div>
         </div>
     </header>
+
+
+    <section class="modal login fade" id="login-modal" tabindex="-1">
+        <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5">LOGIN</h1>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="login-email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="login-email" placeholder="Your Email" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="login-password" class="form-label">Password:</label>
+                        <input type="password" class="form-control" id="login-password" placeholder="Your Password" required>
+                    </div>
+                    <button type="button" class="btn btn-secondary me-2 cancel-modal-btn" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success login-modal-btn" data-bs-dismiss="modal">Login</button>
+                  </form>
+            </div>
+        </div>
+        </div>
+    </section>
 
     <!-- Notification -->
     <div class="notification">
@@ -51,7 +87,6 @@
 
     <section id="AddProduct" class="bg-light">
         <div class="container py-4">
-
             <form>
                 <fieldset class="border border-2 rounded-3 p-4 px-sm-5">
                     <legend  class="float-none w-auto fs-5 fw-bold">Add Product</legend>

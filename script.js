@@ -1,17 +1,3 @@
-const addBtn = document.getElementById("add-btn");
-const addProduct = document.getElementById("AddProduct");
-
-addBtn.addEventListener("click", () => {
-    addProduct.classList.toggle("show");
-});
-
-const sortBtn = document.getElementById("sort-btn");
-const sortFilter = document.getElementById("sort-filter");
-sortBtn.addEventListener("click", () => {
-    sortFilter.classList.toggle("show");
-})
-
-
 const addForm = document.querySelector("#AddProduct form");
 const id = addForm.querySelector("#product-id");
 const name = addForm.querySelector("#name");
@@ -37,18 +23,100 @@ function loadProducts(products) {
                                     <h5 class="card-title" data-bs-toggle="modal" data-bs-target="#modal" onClick="editViewProduct(${product.id}, 'View')">${product.id}. ${product.name.length > 15 ? product.name.slice(0,15) + "...": product.name}</h5>
                                     <p class="card-desc opacity-75">${product.description.length > 50 ? product.description.slice(0,50) + "...": product.description}</p>
                                     <p class="card-price">₹ ${product.price} <span>/-</span> </p>
-                                    <button class="btn btn-sm btn-warning edit" data-bs-toggle="modal" data-bs-target="#modal" onClick="editViewProduct(${product.id}, 'Edit')">Edit</button>
-                                    <button class="btn btn-sm btn-danger delete" onClick={deleteProduct(${product.id})}>Delete</button>
+                                    <div class="edit-delete-wrapper d-none">
+                                        <button class="btn btn-sm btn-warning edit" data-bs-toggle="modal" data-bs-target="#modal" onClick="editViewProduct(${product.id}, 'Edit')">Edit</button>
+                                        <button class="btn btn-sm btn-danger delete" onClick={deleteProduct(${product.id})}>Delete</button>
+                                    </div>
                                 </div>`;
         
         productSection.append(productItem);
 
     });
+
+    loadPagination();
+    if (JSON.parse(sessionStorage.getItem("isLoggedIn"))) {
+        login();
+    }
 }
+
+
+const addBtn = document.getElementById("add-btn");
+const loginInvoke = document.querySelector("#login-btn");
+const logoutBtn = document.querySelector("#logout-btn");
+const isLoggedIn = JSON.parse(sessionStorage.getItem("isLoggedIn")) || false;
+
+if (!isLoggedIn) {
+    loginInvoke.classList.remove("d-none");
+    const loginForm = document.querySelector("#login-modal form");
+    
+    loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+    
+        const loginEmail = loginForm.querySelector("#login-email");
+        const loginPassword = loginForm.querySelector("#login-password");
+    
+        const email = loginEmail.value;
+        const password = loginPassword.value;
+    
+        if (email === "dummy@mail.com" && password === "dummy@password") {
+            login();
+            email.value = password.value = "";
+            showNotification("login-success");
+        } 
+        else {
+            showNotification("login-fail");
+        }
+    });
+}
+else {
+    login();
+}
+
+function login() {
+    loginInvoke.classList.add("d-none");
+    addBtn.classList.remove("d-none");
+    logoutBtn.classList.remove("d-none");
+
+    const editDeleteWrapper = document.querySelectorAll(".edit-delete-wrapper");
+    
+    editDeleteWrapper.forEach((editDelete) => {
+        editDelete.classList.remove("d-none");
+    });
+
+    const productCards = document.querySelectorAll("#Products .card");
+    productCards.forEach((product) => {
+        product.style.height = "22rem";
+    });
+
+    sessionStorage.setItem("isLoggedIn", JSON.stringify(true));
+}
+
+logoutBtn.addEventListener("click", (e) => {
+    logout();
+})
+
+function logout() {
+    sessionStorage.setItem("isLoggedIn", JSON.stringify(false));
+    location.reload();
+}
+
 
 const products = JSON.parse(localStorage.getItem("products")) || [];
 loadProducts(products);
-loadPagination();
+
+
+const addProduct = document.getElementById("AddProduct");
+
+addBtn.addEventListener("click", () => {
+    addProduct.classList.toggle("show");
+});
+
+const sortBtn = document.getElementById("sort-btn");
+const sortFilter = document.getElementById("sort-filter");
+sortBtn.addEventListener("click", () => {
+    sortFilter.classList.toggle("show");
+})
+
 
 let product = {};
 
@@ -87,16 +155,18 @@ addForm.addEventListener("submit", (e) => {
     if (productList == null)
         productList = [];
 
-    productList.push(product);
+    productList.unshift(product);
 
     try {
         localStorage.setItem("products", JSON.stringify(productList));
 
+        loadProducts(productList);
+        login();
+
+        showNotification("Add");
+
         id.value = name.value = price.value = desc.value = imageInput.value = product.image = "";
         outputImage.removeAttribute('src');
-
-        loadProducts(productList);
-        loadPagination();
     }
     catch(error) {
         showNotification("Error");
@@ -113,17 +183,31 @@ function showNotification(msg) {
     notificationText.classList.add("d-flex", "justify-content-between", "align-items-center");
     notification.append(notificationText);
 
-    if (msg === "Error") {
-        notification.style.backgroundColor = 'rgba(220,53,69,0.9)';
-        notificationText.innerHTML = `<p>Storage is Full! Delete some items to Add more..</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
-    }
-    else if (msg === "Edited") {
-        notification.style.backgroundColor = '#318481';
-        notificationText.innerHTML = `<p>Hurrey!! Edited Successfully!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
-    }
-    else if (msg === "Duplicate") {
-        notification.style.backgroundColor = 'rgba(220,53,69,0.9)';
-        notificationText.innerHTML = `<p>Product ID should be Unique!!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
+    switch (msg) {
+        case "Error":
+            notification.style.backgroundColor = 'rgba(220,53,69,0.9)';
+            notificationText.innerHTML = `<p>Storage is Full! Delete some items to Add more..</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
+            break;
+        case "Edited":
+            notification.style.backgroundColor = '#318481';
+            notificationText.innerHTML = `<p>Hurrey!! Edited Successfully!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
+            break;
+        case "Duplicate": 
+            notification.style.backgroundColor = 'rgba(220,53,69,0.9)';
+            notificationText.innerHTML = `<p>Product ID should be Unique!!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
+            break;
+        case "Add":
+            notification.style.backgroundColor = '#318481';
+            notificationText.innerHTML = `<p>Hurrey!! Product Added Successfully!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
+            break;
+        case "Delete":
+            notification.style.backgroundColor = '#318481';
+            notificationText.innerHTML = `<p>Deleted Successfully!!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
+            break;
+        case "login-success":
+            notification.style.backgroundColor = '#318481';
+            notificationText.innerHTML = `<p>Welcome Back! Logged In Successfully!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
+            break;
     }
 
     notification.style.display = "block";
@@ -134,10 +218,18 @@ function showNotification(msg) {
 
     const closeNotification = notification.querySelector(".close");
     closeNotification.addEventListener("click", ()=>{
-        notification.style.display = "none";
+        notification.style.display =     
+        function displayPage(limit){
+            productSection.innerHTML = '';
+            for(let i=0; i<limit; i++){
+                productSection.append(productList[i]);
+            }
+            const pageNum = pageUl.querySelectorAll('.list'); 
+            pageNum.forEach(n => n.remove());
+        }
+        displayPage(itemsPerPage);
     });
-    
-};
+}
 
 // Edit Operation
 function editViewProduct(id, operation) {
@@ -221,7 +313,7 @@ function editViewProduct(id, operation) {
         showNotification("Edited");
 
         loadProducts(productList);
-        loadPagination();
+        login();
     })
 }
 
@@ -247,8 +339,9 @@ function deleteProduct(id) {
 
             localStorage.setItem("products", JSON.stringify(updatedProducts));
             
+            showNotification("Delete");
             loadProducts(updatedProducts);
-            loadPagination();
+            login();
         }
     });
 }
@@ -290,7 +383,6 @@ function sortProducts() {
     localStorage.setItem("products", JSON.stringify(products));
 
     loadProducts(products);
-    loadPagination();
 }
 
 
@@ -321,28 +413,37 @@ function filterProducts() {
     }
 
     loadProducts(searchResult);
-    loadPagination();
 }
 
 function loadPagination() {
-
     const pageUl = document.querySelector(".pagination");
-    const cards = productSection.querySelectorAll(".card");
+    const cards = productSection.getElementsByClassName("card");
+    console.log(cards);
     const productList = [];
     let index = 1;
-    const itemsPerPage = 10;
+    let itemsPerPage = 10;
 
-    if (cards.length <= itemsPerPage)
-        return;
-    
+    if (document.body.clientWidth < 991) {
+        itemsPerPage = 4;
+    }
+    else if (document.body.clientWidth < 1200) {
+        itemsPerPage = 6;
+    }
+    else if (document.body.clientWidth < 1450) {
+        itemsPerPage = 8;
+    }
+
+
     for(let i=0; i<cards.length; i++){ productList.push(cards[i]); }
     
     function displayPage(limit){
         productSection.innerHTML = '';
         for(let i=0; i<limit; i++){
+            if (i >= productList.length)
+                break;
             productSection.append(productList[i]);
         }
-        const pageNum = pageUl.querySelectorAll('.list'); // Review
+        const pageNum = pageUl.querySelectorAll('.list'); 
         pageNum.forEach(n => n.remove());
     }
     displayPage(itemsPerPage);
@@ -395,7 +496,7 @@ function loadPagination() {
     const pageLinks = pageUl.querySelectorAll("a");
     const lastPage =  pageLinks.length - 2;
     const pageList = pageUl.querySelectorAll('.list'); 
-    pageList[0].classList.add("active");
+    pageList[0] && pageList[0].classList.add("active");
     pageRunner(pageLinks, itemsPerPage, lastPage, pageList);
 
     
@@ -409,7 +510,27 @@ function loadPagination() {
             productSection.appendChild(product);
         }
 
+        if (JSON.parse(sessionStorage.getItem("isLoggedIn"))) {
+            login();
+        }
+
         Array.from(pageList).forEach((e)=>{e.classList.remove("active");});
         pageList[index-1].classList.add("active");
     }
 }
+
+
+// Navbar
+const menu = document.querySelector(".hamburger-menu");
+const navList = document.querySelector(".nav-list");
+
+menu.addEventListener("click", () => {
+  navList.classList.toggle("change");
+});
+
+const navBtns = document.querySelectorAll(".btn-container button");
+navBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+        navList.classList.toggle("change");
+    })
+})

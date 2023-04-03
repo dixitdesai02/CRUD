@@ -99,7 +99,6 @@ form img {
 }
 
 
-
 #Products .container {
     display: grid;
     grid-template-columns: 1fr;
@@ -109,7 +108,7 @@ form img {
 
 #Products .card {
     width: 16rem;
-    height: 22rem;
+    height: 20rem;
 }
 
 .card img {
@@ -198,7 +197,7 @@ form img {
     right: 0;
     color: white;
     z-index: 1500;
-    width: 350px;
+    width: 330px;
     vertical-align: middle;
     padding: 1em;
     border-radius: 5px 0 0 5px;
@@ -252,4 +251,67 @@ form img {
   color: inherit;
   display: block;
   font-size: 13px;
+}
+
+#add-btn {
+    font-weight: 500;
+}
+
+#sort-btn {
+    font-weight: 500;
+}
+
+@media screen and (max-width: 768px) {
+    
+    .nav-list {
+        width: 200px;
+        height: fit-content;
+        background-color: rgb(33,37,41);
+        position: fixed;
+        top: 0;
+        right: -325px;
+        display: flex;
+        flex-direction: column;
+        padding: 70px 0 30px 0;
+        align-items: center;
+        border-radius: 0 0 0 10px;
+        font-size: 1rem;
+        transition: right 0.4s cubic-bezier(1, 0, 0, 1);
+    }
+    
+    .change {
+        right: 0;
+    }
+    
+    .hamburger-menu {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 14px;
+        right: 50px;
+        width: 35px;
+        height: 35px;
+        justify-content: space-around;
+        cursor: pointer;
+    }
+    
+    .line {
+        width: 100%;
+        height: 3px;
+        border-radius: 2px;
+        background-color: rgb(199, 199, 199);
+        transition: all 0.4s;
+    }
+    
+    .change .line-1 {
+        transform: rotateZ(-45deg) translate(-8px, 8px);   
+    }
+    
+    .change .line-2 {
+        opacity: 0;
+    }
+    
+    .change .line-3 {
+        transform: rotateZ(45deg) translate(-8px, -9px);
+    }
 }
