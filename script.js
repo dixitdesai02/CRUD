@@ -19,40 +19,43 @@ function loadProducts(products) {
 
     // No Product Items
     if (products.length === 0) {
+        console.log("HELLO");
         const emptyItems = document.createElement("img");
         emptyItems.setAttribute("src", "images/empty.webp");
         productSection.classList.add("d-block", "text-center");
         emptyItems.classList.add("w-75");
-        productSection.append(emptyItems);
-        return;
+        productSection.appendChild(emptyItems);
     }
+    else {
+        // Render Each Product
+        productSection.innerHTML = "";
 
-    // Render Each Product
-    productSection.classList.remove("d-block", "text-center");
-
-    products.forEach((product) => {
-
-        const productItem = document.createElement("div");
-        productItem.setAttribute("href", `productDetail.html?id=${product.id}`);
-        productItem.classList.add("card");
-        productItem.innerHTML += `  <img src="${product.image || 'images/dummy-image.png'}" class="card-img-top" alt="..."  data-bs-toggle="modal" data-bs-target="#modal" onClick="editViewProduct(${product.id}, 'View')">
-                                    <div class="card-body">
-                                    <h5 class="card-title" data-bs-toggle="modal" data-bs-target="#modal" onClick="editViewProduct(${product.id}, 'View')">${product.id}. ${product.name.length > 15 ? product.name.slice(0,15) + "...": product.name}</h5>
-                                    <p class="card-desc opacity-75">${product.description.length > 50 ? product.description.slice(0,50) + "...": product.description}</p>
-                                    <p class="card-price">₹ ${product.price} <span>/-</span> </p>
-                                    <div class="edit-delete-wrapper d-none">
-                                        <div class="flex-grow-1">
-                                            <button class="btn btn-sm btn-warning edit" data-bs-toggle="modal" data-bs-target="#modal" onClick="editViewProduct(${product.id}, 'Edit')">Edit</button>
-                                            <button class="btn btn-sm btn-danger delete" onClick={deleteProduct(${product.id})}>Delete</button>
+        productSection.classList.remove("d-block", "text-center");
+    
+        products.forEach((product) => {
+    
+            const productItem = document.createElement("div");
+            productItem.setAttribute("href", `productDetail.html?id=${product.id}`);
+            productItem.classList.add("card");
+            productItem.innerHTML += `  <img src="${product.image || 'images/dummy-image.png'}" class="card-img-top" alt="..."  data-bs-toggle="modal" data-bs-target="#modal" onClick="editViewProduct(${product.id}, 'View')">
+                                        <div class="card-body">
+                                        <h5 class="card-title" data-bs-toggle="modal" data-bs-target="#modal" onClick="editViewProduct(${product.id}, 'View')">${product.id}. ${product.name.length > 15 ? product.name.slice(0,15) + "...": product.name}</h5>
+                                        <p class="card-desc opacity-75">${product.description.length > 45 ? product.description.slice(0,45) + "...": product.description}</p>
+                                        <p class="card-price">₹ ${product.price} <span>/-</span> </p>
+                                        <div class="edit-delete-wrapper d-none">
+                                            <div class="flex-grow-1">
+                                                <button class="btn btn-sm btn-warning edit" data-bs-toggle="modal" data-bs-target="#modal" onClick="editViewProduct(${product.id}, 'Edit')">Edit</button>
+                                                <button class="btn btn-sm btn-danger delete" onClick={deleteProduct(${product.id})}>Delete</button>
+                                            </div>
+                                            <img class="save-btn justify-item-end ${wishlist.find(wish => wish == product.id) && "d-none"}" src="images/save.svg" alt="Add to wishlist" onClick="AddToWishList(event, ${product.id})">
+                                            <img class="saved-btn ${wishlist.find(wish => wish == product.id) ? "d-inline-block" : "d-none"}" src="images/saved.svg" alt="saved to wishlist" onClick="RemoveFromWishList(event, ${product.id})">
                                         </div>
-                                        <img class="save-btn justify-item-end ${wishlist.find(wish => wish == product.id) && "d-none"}" src="images/save.svg" alt="Add to wishlist" onClick="AddToWishList(event, ${product.id})">
-                                        <img class="saved-btn ${wishlist.find(wish => wish == product.id) ? "d-inline-block" : "d-none"}" src="images/saved.svg" alt="saved to wishlist" onClick="RemoveFromWishList(event, ${product.id})">
-                                    </div>
-                                </div>`;
-        
-        productSection.append(productItem);
-
-    });
+                                    </div>`;
+            
+            productSection.append(productItem);
+    
+        });
+    }
 
     // Load Pagination of Products
     loadPagination();
@@ -89,26 +92,25 @@ if (isLoggedIn === "false") {
         if (email === "user1@mail.com" && password === "user1") {
             login();
             email.value = password.value = "";
-            showNotification("login-success");
             sessionStorage.setItem("username", "user1");
+            location.reload();
         } 
         else if(email === "user2@mail.com" && password === "user2") {
             login();
             email.value = password.value = "";
-            showNotification("login-success");
             sessionStorage.setItem("username", "user2");
+            location.reload();
         }
         else if(email === "user3@mail.com" && password === "user3") {
             login();
             email.value = password.value = "";
-            showNotification("login-success");
             sessionStorage.setItem("username", "user3");
+            location.reload();
         }
         else  {
             // Login Failed
             showNotification("login-fail");
         }
-        location.reload();
     });
 }
 else {
@@ -340,9 +342,6 @@ function updateExistingProduct(id) {
     let productList = JSON.parse(localStorage.getItem("products"));
     const productToBeUpdated = productList.find((product) => product.id === id);
 
-    console.log(productToBeUpdated);
-
-    console.log(id);
     const index = productList.findIndex((product) => product.id == id);
     console.log(index);
     productList.splice(index, 1);
@@ -601,10 +600,6 @@ function showNotification(msg) {
             notification.style.backgroundColor = '#318481';
             notificationText.innerHTML = `<p>Deleted Successfully!!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
             break;
-        case "login-success":
-            notification.style.backgroundColor = '#318481';
-            notificationText.innerHTML = `<p>Welcome Back! Logged In Successfully!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
-            break;
         case "login-fail":
             notification.style.backgroundColor = 'rgba(220,53,69,0.9)';
             notificationText.innerHTML = `<p>Invalid Username or Password!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
@@ -619,17 +614,9 @@ function showNotification(msg) {
 
     // Closing Notification on clicking close btn
     const closeNotification = notification.querySelector(".close");
+    console.log(closeNotification);
     closeNotification.addEventListener("click", ()=>{
-        notification.style.display =     
-        function displayPage(limit){
-            productSection.innerHTML = '';
-            for(let i=0; i<limit; i++){
-                productSection.append(productList[i]);
-            }
-            const pageNum = pageUl.querySelectorAll('.list'); 
-            pageNum.forEach(n => n.remove());
-        }
-        displayPage(itemsPerPage);
+        notification.style.display = "none";
     });
 }
 
@@ -638,7 +625,7 @@ function showNotification(msg) {
 function loadPagination() {
     const pageUl = document.querySelector(".pagination");
     const cards = productSection.getElementsByClassName("card");
-    console.log(cards);
+   
     const productList = [];
     let index = 1;
     let itemsPerPage = 10;
@@ -655,13 +642,15 @@ function loadPagination() {
     }
 
     // Load Cards in a list
-    for(let i=0; i<cards.length; i++){ productList.push(cards[i]); }
+    for(let card of cards){ productList.push(card); }
     
     function displayPage(limit){
-        productSection.innerHTML = '';
+        if (productList.length === 0)
+            return;
+        productSection.innerHTML = "";
         for(let i=0; i<limit; i++){
             if (i >= productList.length)
-                break;
+            break;
             productSection.append(productList[i]);
         }
         // Update Page numers
