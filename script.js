@@ -8,10 +8,27 @@ const outputImage = addForm.querySelector("#output");
 
 const productSection = document.querySelector("#Products .container");
 
-// Load Product cards
+// RENDER PRODUCTS
 function loadProducts(products) {
 
+    // Load Wishlists for each User
+    const username = sessionStorage.getItem("username");
+    const wishlist = JSON.parse(localStorage.getItem(`${username}WishList`)) || [];
+
     productSection.innerHTML = "";
+
+    // No Product Items
+    if (products.length === 0) {
+        const emptyItems = document.createElement("img");
+        emptyItems.setAttribute("src", "images/empty.webp");
+        productSection.classList.add("d-block", "text-center");
+        emptyItems.classList.add("w-75");
+        productSection.append(emptyItems);
+        return;
+    }
+
+    // Render Each Product
+    productSection.classList.remove("d-block", "text-center");
 
     products.forEach((product) => {
 
@@ -24,8 +41,12 @@ function loadProducts(products) {
                                     <p class="card-desc opacity-75">${product.description.length > 50 ? product.description.slice(0,50) + "...": product.description}</p>
                                     <p class="card-price">₹ ${product.price} <span>/-</span> </p>
                                     <div class="edit-delete-wrapper d-none">
-                                        <button class="btn btn-sm btn-warning edit" data-bs-toggle="modal" data-bs-target="#modal" onClick="editViewProduct(${product.id}, 'Edit')">Edit</button>
-                                        <button class="btn btn-sm btn-danger delete" onClick={deleteProduct(${product.id})}>Delete</button>
+                                        <div class="flex-grow-1">
+                                            <button class="btn btn-sm btn-warning edit" data-bs-toggle="modal" data-bs-target="#modal" onClick="editViewProduct(${product.id}, 'Edit')">Edit</button>
+                                            <button class="btn btn-sm btn-danger delete" onClick={deleteProduct(${product.id})}>Delete</button>
+                                        </div>
+                                        <img class="save-btn justify-item-end ${wishlist.find(wish => wish == product.id) && "d-none"}" src="images/save.svg" alt="Add to wishlist" onClick="AddToWishList(event, ${product.id})">
+                                        <img class="saved-btn ${wishlist.find(wish => wish == product.id) ? "d-inline-block" : "d-none"}" src="images/saved.svg" alt="saved to wishlist" onClick="RemoveFromWishList(event, ${product.id})">
                                     </div>
                                 </div>`;
         
@@ -33,6 +54,7 @@ function loadProducts(products) {
 
     });
 
+    // Load Pagination of Products
     loadPagination();
     if (JSON.parse(sessionStorage.getItem("isLoggedIn"))) {
         login();
@@ -40,12 +62,17 @@ function loadProducts(products) {
 }
 
 
+// LOGIN FUNCTIONALITY
 const addBtn = document.getElementById("add-btn");
+const wishlistBtn = document.getElementById("wishlist-btn");
 const loginInvoke = document.querySelector("#login-btn");
 const logoutBtn = document.querySelector("#logout-btn");
-const isLoggedIn = JSON.parse(sessionStorage.getItem("isLoggedIn")) || false;
 
-if (!isLoggedIn) {
+// Check for login status in session storage
+const isLoggedIn = sessionStorage.getItem("isLoggedIn") || false;
+
+// If User is not Logged In
+if (isLoggedIn === "false") {
     loginInvoke.classList.remove("d-none");
     const loginForm = document.querySelector("#login-modal form");
     
@@ -58,29 +85,50 @@ if (!isLoggedIn) {
         const email = loginEmail.value;
         const password = loginPassword.value;
     
-        if (email === "dummy@mail.com" && password === "dummy@password") {
+        // Conditions for Three dummy emails
+        if (email === "user1@mail.com" && password === "user1") {
             login();
             email.value = password.value = "";
             showNotification("login-success");
+            sessionStorage.setItem("username", "user1");
         } 
-        else {
+        else if(email === "user2@mail.com" && password === "user2") {
+            login();
+            email.value = password.value = "";
+            showNotification("login-success");
+            sessionStorage.setItem("username", "user2");
+        }
+        else if(email === "user3@mail.com" && password === "user3") {
+            login();
+            email.value = password.value = "";
+            showNotification("login-success");
+            sessionStorage.setItem("username", "user3");
+        }
+        else  {
+            // Login Failed
             showNotification("login-fail");
         }
+        location.reload();
     });
 }
 else {
+    // Else Do Login Automatically
     login();
 }
 
+// Changes for Logged In User
 function login() {
     loginInvoke.classList.add("d-none");
     addBtn.classList.remove("d-none");
+    wishlistBtn.classList.remove("d-none");
     logoutBtn.classList.remove("d-none");
 
+    // Unhide Edit and Delete
     const editDeleteWrapper = document.querySelectorAll(".edit-delete-wrapper");
     
     editDeleteWrapper.forEach((editDelete) => {
         editDelete.classList.remove("d-none");
+        editDelete.classList.add("d-flex");
     });
 
     const productCards = document.querySelectorAll("#Products .card");
@@ -88,23 +136,118 @@ function login() {
         product.style.height = "22rem";
     });
 
-    sessionStorage.setItem("isLoggedIn", JSON.stringify(true));
+    sessionStorage.setItem("isLoggedIn", true);
 }
 
+// LOGOUT 
 logoutBtn.addEventListener("click", (e) => {
     logout();
 })
 
+// Make LoggedIn Status to False
 function logout() {
-    sessionStorage.setItem("isLoggedIn", JSON.stringify(false));
+    sessionStorage.setItem("isLoggedIn", false);
     location.reload();
 }
 
-
+// Fetch All the Products from localstorage and call LoadProducts Method
 const products = JSON.parse(localStorage.getItem("products")) || [];
 loadProducts(products);
 
 
+
+// Diff WishList for Each User
+let user1WishList = JSON.parse(localStorage.getItem("user1WishList")) || [];
+let user2WishList = JSON.parse(localStorage.getItem("user2WishList")) || [];;
+let user3WishList = JSON.parse(localStorage.getItem("user3WishList")) || [];
+
+// Add To Wish List of Products
+function AddToWishList(event, id) {
+    const saveBtn = event.target;
+    saveBtn.classList.add("d-none");
+
+    const savedBtn = saveBtn.nextElementSibling;
+    savedBtn.classList.remove("d-none");
+
+    let username = sessionStorage.getItem("username");
+
+    // Switch to particular user and add product to its respective wishlist
+    switch (username) {
+        case "user1":
+            user1WishList.push(id);
+            localStorage.setItem("user1WishList", JSON.stringify(user1WishList));
+            break;
+        case "user2":
+            user2WishList.push(id);
+            localStorage.setItem("user2WishList",  JSON.stringify(user2WishList));
+            break;
+        case "user3":
+            user3WishList.push(id);
+            localStorage.setItem("user3WishList", JSON.stringify(user3WishList));
+            break;
+    } 
+}
+
+// Remove from particular wishlist
+function RemoveFromWishList(event, id) {
+    const savedBtn = event.target;
+    savedBtn.classList.add("d-none");
+
+    const saveBtn = savedBtn.previousElementSibling;
+    saveBtn.classList.remove("d-none");
+
+    let username = sessionStorage.getItem("username");
+    switch (username) {
+        case "user1":
+            user1WishList = user1WishList.filter(savedItemId => savedItemId != id);
+            localStorage.setItem("user1WishList", JSON.stringify(user1WishList));
+            break;
+        case "user2":
+            user2WishList = user2WishList.filter(savedItemId => savedItemId != id);
+            localStorage.setItem("user2WishList",  JSON.stringify(user2WishList));
+            break;
+        case "user3":
+            user3WishList = user3WishList.filter(savedItemId => savedItemId != id);
+            localStorage.setItem("user3WishList", JSON.stringify(user3WishList));
+            break;
+    }
+}
+
+// To Render Wishlist Product items
+wishlistBtn.addEventListener("click", (e) => {
+    const products = JSON.parse(localStorage.getItem("products"));
+
+    let username = sessionStorage.getItem("username");
+    let wishList = [];
+
+    switch (username) {
+        case "user1":
+            user1WishList = JSON.parse(localStorage.getItem("user1WishList")) || [];
+            user1WishList.forEach(id => {
+                wishList.push(products.find(product => product.id == id));
+            })
+            break;
+        case "user2":
+            user2WishList = JSON.parse(localStorage.getItem("user2WishList")) || [];
+            user2WishList.forEach(id => {
+                wishList.push(products.find(product => product.id == id));
+            })
+            break;
+        case "user3":
+            user3WishList = JSON.parse(localStorage.getItem("user3WishList")) || [];
+            user3WishList.forEach(id => {
+                wishList.push(products.find(product => product.id == id));
+            })
+            break;
+    }
+
+    // Removing All the undefined (Falsy Values) from Array
+    wishList = wishList.filter( Boolean );
+    loadProducts(wishList)
+});
+
+
+// Add and SortFilter Products Hide and Show Toggle 
 const addProduct = document.getElementById("AddProduct");
 
 addBtn.addEventListener("click", () => {
@@ -118,9 +261,11 @@ sortBtn.addEventListener("click", () => {
 })
 
 
+
+// CREATE Product
 let product = {};
 
-// Create Product
+// Load Image and render it for Preview
 imageInput.addEventListener('change', (event) => {
     const image = event.target.files[0];
 
@@ -136,10 +281,11 @@ imageInput.addEventListener('change', (event) => {
     });
 });
 
-
+// On Submitting Add Product Form
 addForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
+    // Fetch Values from Form
     product.id = id.value;
     product.name = name.value;
     product.price = price.value;
@@ -147,14 +293,28 @@ addForm.addEventListener("submit", (e) => {
 
     let productList = JSON.parse(localStorage.getItem("products"));
 
-    if (productList.find((product) => product.id === id.value)) {
-        showNotification("Duplicate");
+    // Check of Existance of Product Id in Products List
+    // If ID is already present, then show popup for updating or not
+    if (productList && productList.find((product) => product.id === id.value)) {
+        swal({
+            title: "Product Already Exists!",
+            text: "Do you want update the existing product?",
+            icon: "warning",
+            buttons: ["Cancel", "Update"],
+          })
+          .then((willUpdate) => {
+            if (willUpdate) {
+              updateExistingProduct(id.value);  
+              showNotification("Edited");
+            }
+          });
         return;
     }
 
     if (productList == null)
         productList = [];
 
+    // Push Element at Starting of List
     productList.unshift(product);
 
     try {
@@ -163,75 +323,44 @@ addForm.addEventListener("submit", (e) => {
         loadProducts(productList);
         login();
 
+        // Notification for Adding Successfully
         showNotification("Add");
 
         id.value = name.value = price.value = desc.value = imageInput.value = product.image = "";
         outputImage.removeAttribute('src');
     }
     catch(error) {
+        // Incase of Any Error
         showNotification("Error");
     }
-
 });
 
-function showNotification(msg) {
-    const notification = document.querySelector(".notification");
+// For Updating Product when Adding Product which is already there with the same ID
+function updateExistingProduct(id) {
+    let productList = JSON.parse(localStorage.getItem("products"));
+    const productToBeUpdated = productList.find((product) => product.id === id);
 
-    notification.innerHTML = "";
+    console.log(productToBeUpdated);
 
-    const notificationText = document.createElement("div");
-    notificationText.classList.add("d-flex", "justify-content-between", "align-items-center");
-    notification.append(notificationText);
+    console.log(id);
+    const index = productList.findIndex((product) => product.id == id);
+    console.log(index);
+    productList.splice(index, 1);
 
-    switch (msg) {
-        case "Error":
-            notification.style.backgroundColor = 'rgba(220,53,69,0.9)';
-            notificationText.innerHTML = `<p>Storage is Full! Delete some items to Add more..</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
-            break;
-        case "Edited":
-            notification.style.backgroundColor = '#318481';
-            notificationText.innerHTML = `<p>Hurrey!! Edited Successfully!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
-            break;
-        case "Duplicate": 
-            notification.style.backgroundColor = 'rgba(220,53,69,0.9)';
-            notificationText.innerHTML = `<p>Product ID should be Unique!!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
-            break;
-        case "Add":
-            notification.style.backgroundColor = '#318481';
-            notificationText.innerHTML = `<p>Hurrey!! Product Added Successfully!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
-            break;
-        case "Delete":
-            notification.style.backgroundColor = '#318481';
-            notificationText.innerHTML = `<p>Deleted Successfully!!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
-            break;
-        case "login-success":
-            notification.style.backgroundColor = '#318481';
-            notificationText.innerHTML = `<p>Welcome Back! Logged In Successfully!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
-            break;
-    }
+    productToBeUpdated.name = name.value;
+    productToBeUpdated.price = price.value;
+    productToBeUpdated.description = desc.value;
+    productToBeUpdated.image = product.image;
 
-    notification.style.display = "block";
+    productList.unshift(productToBeUpdated);
 
-    setTimeout(()=>{
-        notification.style.display = "none";
-    }, 4000);
+    console.log("Updated List:", productList);
 
-    const closeNotification = notification.querySelector(".close");
-    closeNotification.addEventListener("click", ()=>{
-        notification.style.display =     
-        function displayPage(limit){
-            productSection.innerHTML = '';
-            for(let i=0; i<limit; i++){
-                productSection.append(productList[i]);
-            }
-            const pageNum = pageUl.querySelectorAll('.list'); 
-            pageNum.forEach(n => n.remove());
-        }
-        displayPage(itemsPerPage);
-    });
+    localStorage.setItem("products", JSON.stringify(productList));
+    loadProducts(productList);
 }
 
-// Edit Operation
+// EDIT Operation
 function editViewProduct(id, operation) {
 
     const productList = JSON.parse(localStorage.getItem("products"));
@@ -251,6 +380,7 @@ function editViewProduct(id, operation) {
 
 
     idInput.value = id;
+    // ID Can't Get Updated
     idInput.setAttribute("disabled", true);
 
     name.value = productToBeUpdated.name;
@@ -258,6 +388,7 @@ function editViewProduct(id, operation) {
     desc.value = productToBeUpdated.description;    
     outputImage.src = productToBeUpdated.image;
 
+    // Make Editing Disabled if Operation is only for view
     if (operation === "View") {
         name.setAttribute("disabled", true);
         price.setAttribute("disabled", true);
@@ -277,6 +408,7 @@ function editViewProduct(id, operation) {
 
     const editedProduct = {};
 
+    // For Updating Image
     imageInput.addEventListener('change', (event) => {
         const image = event.target.files[0];
     
@@ -292,7 +424,7 @@ function editViewProduct(id, operation) {
         });
     });
 
-
+    // On Submitting Edit Form
     editForm.addEventListener("submit", (e) => {
         e.preventDefault();
 
@@ -301,6 +433,7 @@ function editViewProduct(id, operation) {
         editedProduct.price = price.value;
         editedProduct.description = desc.value;
 
+        // Find Index of Product that is going to be updated
         const foundIndex = productList.findIndex(product => product.id == id);
 
         if (!editedProduct.image)
@@ -308,22 +441,22 @@ function editViewProduct(id, operation) {
 
         productList[foundIndex] = editedProduct;
 
+        // Set Updated List
         localStorage.setItem("products", JSON.stringify(productList));
         
         showNotification("Edited");
 
         loadProducts(productList);
-        login();
     })
 }
 
 
-// Delete Operation
+// DELETE Operation
 function deleteProduct(id) {
 
     const products = JSON.parse(localStorage.getItem("products"));
-    console.log(`id${id}`);
 
+    // Pop up for Warning
     swal({
         title: "Are you sure?",
         text: "You won't be able to recover this Product!",
@@ -335,19 +468,41 @@ function deleteProduct(id) {
         if (willDelete) {
             const updatedProducts = products.filter(product => product.id != id);
 
-            console.log(updatedProducts);
-
             localStorage.setItem("products", JSON.stringify(updatedProducts));
             
+            // Also Delete from WishList Array
+            deleteFromWishList(id);
+
             showNotification("Delete");
             loadProducts(updatedProducts);
-            login();
         }
     });
 }
 
+// Delete from wishlist function
+function deleteFromWishList(id) {
+    let index;
+    const username = sessionStorage.getItem("username");
+    switch (username) {
+        case "user1":
+            index = user1WishList.indexOf(id);
+            user1WishList.splice(index, 1);
+            localStorage.setItem("user1WishList", JSON.stringify(user1WishList));
+            
+        case "user2":
+            index = user2WishList.indexOf(id);
+            user2WishList.splice(index, 1);
+            localStorage.setItem("user2WishList", JSON.stringify(user2WishList));
+            
+        case "user3":
+            index = user3WishList.indexOf(id);
+            user3WishList.splice(index, 1);
+            localStorage.setItem("user3WishList", JSON.stringify(user3WishList));
+            
+    }
+}
 
-// Sort Products
+// SORT Products
 const sort = document.querySelector(".sort-selector");
 const order = document.querySelector(".order-selector");
 
@@ -386,7 +541,7 @@ function sortProducts() {
 }
 
 
-// Filter Products
+// FILTER Products
 const searchFilter = document.querySelector(".search");
 console.log(searchFilter);
 searchFilter.addEventListener("input", () => {
@@ -394,12 +549,14 @@ searchFilter.addEventListener("input", () => {
 })
 
 function filterProducts() {
+    // Fetching value of input 
     const searchTerm = searchFilter.value;
 
     const products = JSON.parse(localStorage.getItem("products")) || [];
 
     const searchResult = [];
 
+    // Search for product using search Term in ID, Name, Desc
     for (let product of products) {
         if (product.id.includes(searchTerm)) {
             searchResult.push(product);
@@ -412,9 +569,72 @@ function filterProducts() {
         }
     }
 
+    // Load New Filtered Products
     loadProducts(searchResult);
 }
 
+
+// NOTIFICATION function for diff Operations
+function showNotification(msg) {
+    const notification = document.querySelector(".notification");
+
+    notification.innerHTML = "";
+
+    const notificationText = document.createElement("div");
+    notificationText.classList.add("d-flex", "justify-content-between", "align-items-center");
+    notification.append(notificationText);
+
+    switch (msg) {
+        case "Error":
+            notification.style.backgroundColor = 'rgba(220,53,69,0.9)';
+            notificationText.innerHTML = `<p>Storage is Full! Delete some items to Add more..</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
+            break;
+        case "Edited":
+            notification.style.backgroundColor = '#318481';
+            notificationText.innerHTML = `<p>Hurrey!! Edited Successfully!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
+            break;
+        case "Add":
+            notification.style.backgroundColor = '#318481';
+            notificationText.innerHTML = `<p>Hurrey!! Product Added Successfully!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
+            break;
+        case "Delete":
+            notification.style.backgroundColor = '#318481';
+            notificationText.innerHTML = `<p>Deleted Successfully!!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
+            break;
+        case "login-success":
+            notification.style.backgroundColor = '#318481';
+            notificationText.innerHTML = `<p>Welcome Back! Logged In Successfully!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
+            break;
+        case "login-fail":
+            notification.style.backgroundColor = 'rgba(220,53,69,0.9)';
+            notificationText.innerHTML = `<p>Invalid Username or Password!</p> <i class="close fa-solid fa-xmark fs-4"></i>`;
+            break;
+    }
+
+    notification.style.display = "block";
+
+    setTimeout(()=>{
+        notification.style.display = "none";
+    }, 4000);
+
+    // Closing Notification on clicking close btn
+    const closeNotification = notification.querySelector(".close");
+    closeNotification.addEventListener("click", ()=>{
+        notification.style.display =     
+        function displayPage(limit){
+            productSection.innerHTML = '';
+            for(let i=0; i<limit; i++){
+                productSection.append(productList[i]);
+            }
+            const pageNum = pageUl.querySelectorAll('.list'); 
+            pageNum.forEach(n => n.remove());
+        }
+        displayPage(itemsPerPage);
+    });
+}
+
+
+// PAGINATION
 function loadPagination() {
     const pageUl = document.querySelector(".pagination");
     const cards = productSection.getElementsByClassName("card");
@@ -423,6 +643,7 @@ function loadPagination() {
     let index = 1;
     let itemsPerPage = 10;
 
+    // Adjust items per page according to screen size
     if (document.body.clientWidth < 991) {
         itemsPerPage = 4;
     }
@@ -433,7 +654,7 @@ function loadPagination() {
         itemsPerPage = 8;
     }
 
-
+    // Load Cards in a list
     for(let i=0; i<cards.length; i++){ productList.push(cards[i]); }
     
     function displayPage(limit){
@@ -443,11 +664,13 @@ function loadPagination() {
                 break;
             productSection.append(productList[i]);
         }
+        // Update Page numers
         const pageNum = pageUl.querySelectorAll('.list'); 
         pageNum.forEach(n => n.remove());
     }
     displayPage(itemsPerPage);
     
+    // Function to Add Page Numbers to possible pages
     function pageGenerator(itemsPerPage){
         const nProducts = productList.length;  
         console.log(nProducts);
@@ -455,6 +678,7 @@ function loadPagination() {
             pageUl.style.display = 'none';
         }else{
             pageUl.style.display = 'flex';
+            // Count of Number of pages
             const nPages = Math.ceil(nProducts/itemsPerPage);
             for(i=1; i<=nPages; i++){
                 const li = document.createElement('li'); li.classList.add('list');
@@ -468,6 +692,7 @@ function loadPagination() {
 
     pageGenerator(itemsPerPage);
 
+    // Update Page index on clicking page number or Next, Prev
     function pageRunner(pageLinks, itemsPerPage, lastPage, pageList){
         for(let button of pageLinks){
             button.onclick = e=>{
@@ -499,7 +724,7 @@ function loadPagination() {
     pageList[0] && pageList[0].classList.add("active");
     pageRunner(pageLinks, itemsPerPage, lastPage, pageList);
 
-    
+    // Load Page and Update Active class of page
     function pageMaker(index, itemsPerPage, pageList){
         const start = itemsPerPage * index;
         const end  = start + itemsPerPage;
@@ -520,7 +745,7 @@ function loadPagination() {
 }
 
 
-// Navbar
+// NAVBAR Menu Toggle
 const menu = document.querySelector(".hamburger-menu");
 const navList = document.querySelector(".nav-list");
 
