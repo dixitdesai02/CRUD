@@ -72,10 +72,10 @@ const loginInvoke = document.querySelector("#login-btn");
 const logoutBtn = document.querySelector("#logout-btn");
 
 // Check for login status in session storage
-const isLoggedIn = sessionStorage.getItem("isLoggedIn") || false;
+const isLoggedIn = JSON.parse(sessionStorage.getItem("isLoggedIn")) || false;
 
 // If User is not Logged In
-if (isLoggedIn === "false") {
+if (!isLoggedIn) {
     loginInvoke.classList.remove("d-none");
     const loginForm = document.querySelector("#login-modal form");
     
@@ -138,7 +138,7 @@ function login() {
         product.style.height = "22rem";
     });
 
-    sessionStorage.setItem("isLoggedIn", true);
+    sessionStorage.setItem("isLoggedIn", JSON.stringify(true));
 }
 
 // LOGOUT 
@@ -148,7 +148,7 @@ logoutBtn.addEventListener("click", (e) => {
 
 // Make LoggedIn Status to False
 function logout() {
-    sessionStorage.setItem("isLoggedIn", false);
+    sessionStorage.setItem("isLoggedIn", JSON.stringify(false));
     location.reload();
 }
 
