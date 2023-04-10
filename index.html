@@ -5,8 +5,217 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Management System</title>
+
+    <link rel="shortcut icon" href="images/logo-1.png" type="image/x-icon">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- SweetAlert -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js" defer></script>
+
+    <!-- JS -->
+    <script src="script.js" defer></script>
+
 </head>
 <body>
-    
+    <header class="bg-dark text-light py-3 sticky-top">
+        <div class="container d-flex justify-content-between">
+            <a href="/" class="fw-bold text-light fs-2"> <img src="images/logo-1.png" alt="logo" draggable="false"> PMS</a>
+            <div class="nav-list my-auto">
+                <div class="hamburger-menu">
+                    <div class="line line-1"></div>
+                    <div class="line line-2"></div>
+                    <div class="line line-3"></div>
+                </div>
+
+                <div class="btn-container d-flex flex-column flex-md-row gap-3 align-items-sm-center">
+                    <button id="add-btn" class="btn px-3 btn-success d-none">Add Product</button>
+                    <button id="wishlist-btn" class="btn px-3 btn-success d-none">Wish List</button>
+                    <button id="sort-btn" class="btn px-3 btn-success">Sort & Filter</button>
+                    <button id="login-btn" class="btn px-3 btn-info d-none mt-3 mt-md-0 ms-md-3"  data-bs-toggle="modal" data-bs-target="#login-modal" >Login</button>
+                    <button id="logout-btn" class="btn px-3 btn-info d-none mt-3 mt-md-0 ms-md-3">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <section class="modal login fade" id="login-modal" tabindex="-1">
+        <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5">LOGIN</h1>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="login-email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="login-email" placeholder="Your Email" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="login-password" class="form-label">Password:</label>
+                        <input type="password" class="form-control" id="login-password" placeholder="Your Password" required>
+                    </div>
+                    <button type="button" class="btn btn-secondary me-2 cancel-modal-btn" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success login-modal-btn" data-bs-dismiss="modal">Login</button>
+                  </form>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Notification -->
+    <div class="notification">
+        
+    </div>
+
+
+    <section id="AddProduct" class="bg-light">
+        <div class="container py-4">
+            <form>
+                <fieldset class="border border-2 rounded-3 p-4 px-sm-5">
+                    <legend  class="float-none w-auto fs-5 fw-bold">Add Product</legend>
+                <div class="d-flex gap-4 mb-4">
+                    <div class="w-50">
+                        <label for="product-id" class="form-label">Product ID</label>
+                        <input type="number" class="form-control" id="product-id" placeholder="Ex. 1" required>
+                    </div>
+                    <div class="w-100">
+                      <label for="name" class="form-label">Name</label>
+                      <input type="text" class="form-control" id="name" placeholder="Product Name" required>
+                    </div>
+                </div>
+                <div class="d-flex gap-4 mb-3">
+                    <div class="w-50">
+                      <label for="price" class="form-label">Price</label>
+                      <input type="number" class="form-control" id="price" placeholder="₹ 99" required>
+                    </div>
+                    <div class="w-100">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" rows="3" placeholder="Product Description"></textarea>
+                    </div>
+                </div>
+                <div class="d-flex gap-4 mb-3">
+                    <div class="w-50">
+                        <label for="image" class="form-label">Image</label>
+                        <input type="file" accept="image/*" class="form-control" id="image">
+                    </div>
+                    <div class="w-100">
+                        <img id="output"/>	
+                    </div>
+                </div>
+                <button type="submit" class="mt-3 btn btn-success">Save Product</button>
+            </fieldset>
+            </form>
+        </div>
+    </section>
+
+    <!-- Sort & Filter -->
+    <section id="sort-filter" class="mt-2">
+        <div class="container d-flex gap-3 justify-content-center justify-content-md-between flex-column flex-md-row">
+            <div class="sort d-flex gap-2 w-100">
+                <div class="d-flex">
+                    <span class="d-block m-auto me-2">Sort By:</span>
+                    <select class="form-select sort-selector">
+                        <option value="select">Select</option>
+                        <option value="id">ID</option>
+                        <option value="name">Name</option>
+                        <option value="price">Price</option>
+                    </select>
+                </div>
+                <div>
+                    <select class="form-select order-selector">
+                        <option value="asc" selected>ASC</option>
+                        <option value="desc">DESC</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter w-100">
+                <input type="text" class="form-control search w-100" placeholder="Search by Product ID, Name, Desc...">
+            </div>
+        </div>
+    </section>
+
+    <section id="Products" class="bg-body-subtle py-4">
+        <div class="container">
+            
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <section class="modal fade" id="modal" tabindex="-1">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5"></h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="d-flex gap-4 mb-4">
+                        <div class="w-50">
+                            <label for="edit-id" class="form-label">Product ID</label>
+                            <input type="number" class="form-control" id="edit-id" placeholder="Ex. 1" required>
+                        </div>
+                        <div class="w-100">
+                          <label for="edit-name" class="form-label">Name</label>
+                          <input type="text" class="form-control" id="edit-name" placeholder="Product Name" required>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-4 mb-3">
+                        <div class="w-50">
+                          <label for="edit-price" class="form-label">Price</label>
+                          <input type="number" class="form-control" id="edit-price" placeholder="₹ 99" required>
+                        </div>
+                        <div class="w-100">
+                            <label for="edit-description" class="form-label">Description</label>
+                            <textarea class="form-control" id="edit-description" rows="3" placeholder="Product Description"></textarea>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-4 mb-4">
+                        <div class="w-50">
+                            <label for="edit-image" class="form-label">Image</label>
+                            <input type="file" accept="image/*" class="form-control" id="edit-image">
+                        </div>
+                        <div class="w-100">
+                            <img id="output-edit"/>	
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn edit save-changes" data-bs-dismiss="modal">Save changes</button>
+                  </form>
+            </div>
+        </div>
+        </div>
+    </section>
+
+
+    <nav>
+        <div class="bottom-field">
+            <ul class="pagination">
+              <li class="prev"><a href="#" id="prev">&#139;</a></li>
+                <!-- page number here -->
+              <li class="next"><a href="#" id="next">&#155;</a></li>
+            </ul>
+        </div>
+      </nav>
+
 </body>
 </html>

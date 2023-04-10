@@ -1,0 +1,324 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    position: relative;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+h1 {
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #212529;
+}
+
+header {
+    z-index: 100;
+}
+
+header img {
+    width: 50px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.form-select {
+    width: 100px;
+    cursor: pointer;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+label {
+    text-shadow: 0px 0px 1px #000;
+}
+
+#sort-filter {
+    position: relative;
+    top: -80px;
+    visibility: hidden;
+    max-height: 0;
+    height: fit-content;
+    transition: all 0.1s linear;
+}
+
+#sort-filter.show {
+    visibility: visible;
+    top: 0;
+    max-height: 100px;
+}
+
+#AddProduct {
+    position: relative;
+    top: -550px;
+    max-height: 0;
+    height: fit-content;
+    transition: all 0.3s linear;
+}
+
+#AddProduct.show {
+    max-height: 650px;
+    top: 0;
+    z-index: 1;
+}
+
+#AddProduct form {
+    width: 900px;
+    max-width: 95%;
+    margin: auto;
+}
+
+::placeholder {
+    font-size: 0.9rem;
+}
+
+form img {
+    width: 180px;
+    border: 0;
+    outline: 0;
+    object-fit: contain;
+}
+
+
+#Products .container {
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items: center;
+    gap: 1rem;
+}
+
+#Products .card {
+    width: 16rem;
+    height: 20rem;
+}
+
+.card .card-img-top {
+    height: 10rem;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.card-title {
+    cursor: pointer;
+}
+
+.card-price {
+    font-size: 0.9rem;
+    text-shadow: 0px 0px 1px #000;
+}
+
+.card-price span {
+    font-size: 0.7rem;
+}
+
+.card .card-desc {
+    height: 3rem
+}
+
+.edit {
+    background-color: rgba(255,193,7,0.4);
+    border: 1px solid rgba(255,193,7, 0.4);
+}
+
+.edit:hover {
+    background-color: rgba(255,193,7,0.6);
+}
+
+.edit:active {
+    background-color: rgba(255,193,7);
+}
+
+.card .delete {
+    background-color: rgba(220,53,69,0.85);
+}
+
+.card .delete:hover {
+    background-color: rgba(220,53,69,0.9);
+}
+
+.card .delete:active {
+    background-color: rgba(220,53,69,1);
+}
+
+.save-btn, .saved-btn {
+    cursor: pointer;
+}
+
+@media screen and (min-width: 567px) {
+    #Products .container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (min-width: 991px) {
+    #Products .container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    #Products .container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media screen and (min-width: 1450px) {
+    #Products .container {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+
+.save-modal-btn {
+    background:rgba(255,193,7,0.4);
+}
+
+
+.notification {
+    display: none;
+    position: fixed;
+    top: 10%;
+    right: 0;
+    color: white;
+    z-index: 1500;
+    width: 330px;
+    vertical-align: middle;
+    padding: 1em;
+    border-radius: 5px 0 0 5px;
+}
+
+.notification p {
+    margin: auto 0;
+}
+
+.notification i {
+    cursor: pointer;
+}
+
+@media screen and (min-width: 556px) {
+    .notification {
+        width: 500px;
+    }
+}
+
+
+.bottom-field{
+    width: 100%;
+    padding: 20px;
+    margin-top: 20px;
+}
+.pagination{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pagination li{
+  list-style: none;
+  padding: 2px;
+  margin: 5px;
+  flex-shrink: 0;
+  text-align: center;
+  border-radius: 3px;
+  border: 1px solid rgb(219, 219, 219);
+  color: #444;
+  font-weight: bold;
+}
+.pagination li.active{
+  background: #20ac86;
+  color: white;
+  border-color: #20ac86;
+}
+
+.pagination li a{
+  text-decoration: none;
+  padding: 3px 8px;
+  color: inherit;
+  display: block;
+  font-size: 13px;
+}
+
+#add-btn {
+    font-weight: 500;
+}
+
+#sort-btn {
+    font-weight: 500;
+}
+
+#wishlist-btn {
+    font-weight: 500;
+}
+
+@media screen and (max-width: 768px) {
+    
+    .nav-list {
+        width: 200px;
+        height: fit-content;
+        background-color: rgb(33,37,41);
+        position: fixed;
+        top: 0;
+        right: -325px;
+        display: flex;
+        flex-direction: column;
+        padding: 70px 0 30px 0;
+        align-items: center;
+        border-radius: 0 0 0 10px;
+        font-size: 1rem;
+        transition: right 0.4s cubic-bezier(1, 0, 0, 1);
+    }
+    
+    .change {
+        right: 0;
+    }
+    
+    .hamburger-menu {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 14px;
+        right: 50px;
+        width: 35px;
+        height: 35px;
+        justify-content: space-around;
+        cursor: pointer;
+    }
+    
+    .line {
+        width: 100%;
+        height: 3px;
+        border-radius: 2px;
+        background-color: rgb(199, 199, 199);
+        transition: all 0.4s;
+    }
+    
+    .change .line-1 {
+        transform: rotateZ(-45deg) translate(-8px, 8px);   
+    }
+    
+    .change .line-2 {
+        opacity: 0;
+    }
+    
+    .change .line-3 {
+        transform: rotateZ(45deg) translate(-8px, -9px);
+    }
+}
